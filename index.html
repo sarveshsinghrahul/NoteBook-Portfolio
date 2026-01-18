@@ -1,0 +1,453 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Drafting Studio Portfolio</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&amp;family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#374151",
+                        "comp-green": "#eef7ed",
+                        "comp-line": "rgba(34, 197, 94, 0.15)",
+                        "pencil": "#4b5563",
+                        "sticky-yellow": "#fef9c3",
+                        "sticky-blue": "#e0f2fe",
+                        "paper-aged": "#fdf6e3", 
+                        "chalkboard": "#2b3a33",
+                        "chalk-dust": "rgba(255, 255, 255, 0.2)",
+                        "blueprint-bg": "#1e3a8a",
+                        "blueprint-line": "rgba(255, 255, 255, 0.25)",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"],
+                        "hand": ["Architects Daughter", "cursive"],
+                        "mono": ["Space Mono", "monospace"],
+                    },
+                    backgroundImage: {
+                        'loose-paper': "linear-gradient(to bottom right, #ffffff, #f9f9f9)",
+                        'lined-paper': "repeating-linear-gradient(transparent, transparent 31px, #e5e7eb 31px, #e5e7eb 32px)",
+                    },
+                    cursor: {
+                        'chalk': 'url(data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white"><circle cx="12" cy="12" r="6"/></svg>) 12 12, auto',
+                    },
+                    animation: {
+                        'agent-move': 'agentPath 8s linear infinite',
+                        'log-scroll': 'logScroll 8s linear infinite',
+                        'scanline': 'scanline 8s linear infinite',
+                        'draw-dimension': 'drawDimension 2s ease-out forwards',
+                    },
+                    keyframes: {
+                        agentPath: {
+                            '0%': { transform: 'translate(40px, 40px)' },'10%': { transform: 'translate(100px, 40px)' },'20%': { transform: 'translate(100px, 100px)' },'30%': { transform: 'translate(40px, 100px)' },'40%': { transform: 'translate(40px, 160px)' },'50%': { transform: 'translate(100px, 160px)' },'60%': { transform: 'translate(100px, 120px)' },'70%': { transform: 'translate(160px, 120px)' },'80%': { transform: 'translate(160px, 160px)' },'90%': { transform: 'translate(160px, 160px) scale(1.2)' },'100%': { transform: 'translate(40px, 40px)' }},
+                        logScroll: {
+                            '0%': { transform: 'translateY(0)' },
+                            '100%': { transform: 'translateY(-100px)' }
+                        },
+                        scanline: {
+                            '0%': { backgroundPosition: '0 0' },
+                            '100%': { backgroundPosition: '0 100%' }
+                        },
+                        drawDimension: {
+                            '0%': { width: '0%', opacity: 0 },
+                            '100%': { width: '100%', opacity: 1 }
+                        }
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        :root {
+            --pencil-gray: #4b5563;
+            --comp-grid-color: #a8d5ba;
+            --margin-red: #ef4444;
+            --dim-line: #94a3b8;
+        }
+        .dark {
+            --pencil-gray: #e5e7eb;
+            --comp-grid-color: rgba(255, 255, 255, 0.15);
+            --margin-red: #60a5fa;
+            --dim-line: #fff;
+        }
+        body {
+            /* Updated cursor to a filled pencil for better visibility */
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%234b5563' stroke='white' stroke-width='1.5'><path d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z'/></svg>") 0 24, auto
+        }
+        .dark body {
+             cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%23e5e7eb' stroke='%23374151' stroke-width='1.5'><path d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z'/></svg>") 0 24, auto
+        }
+        .bg-comp-pad {
+            background-color: #f0f7f0;
+            background-image: linear-gradient(var(--comp-grid-color) 1px, transparent 1px), linear-gradient(90deg, var(--comp-grid-color) 1px, transparent 1px), linear-gradient(90deg, transparent 40px, var(--margin-red) 40px, var(--margin-red) 41px, transparent 41px),linear-gradient(90deg, transparent calc(100% - 40px), var(--margin-red) calc(100% - 40px), var(--margin-red) calc(100% - 39px), transparent calc(100% - 39px));
+            background-size: 25px 25px, 25px 25px, 100% 100%, 100% 100%;
+            background-attachment: fixed;
+            background-position: center;
+            box-shadow: inset 0 0 150px rgba(0, 0, 0, 0.05);
+            transition: background-color 0.5s, background-image 0.5s;
+        }
+        .dark .bg-comp-pad {
+            background-color: #1e3a8a;
+            background-image: linear-gradient(var(--comp-grid-color) 1px, transparent 1px), linear-gradient(90deg, var(--comp-grid-color) 1px, transparent 1px);
+             box-shadow: inset 0 0 150px rgba(0, 0, 0, 0.4);
+        }
+        .paper-grain::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.08;
+            pointer-events: none;
+            z-index: 50;
+            background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuBOhcdYOzDR-qf_CXvOBN1QAi9xDWSSixxhuu9VrbCERcebmsw1qpGxjQL-QsGrovPEI2IuI2JhttPBOozMdSN7Z-DcAHr1VqOxfL8pOx3dYs6rjm_bNX5f_hJGdz9Pqj6h76cbhnfxk9aXl9BJWSo0M0aeVsSxPWb3O4RFJ8n6dok4xYARnSLSEsszSegWE2qOC4SKAw4dEl6D6nqfDT9kC7n0HSz7OQsRdOLVpmFDk3g37S_DSRrIejoAr1KpcMBkiiXELexRaklo);
+            background-repeat: repeat;
+            mix-blend-mode: multiply
+        }
+        .dark .paper-grain::before {
+            opacity: 0.05;
+            mix-blend-mode: soft-light;
+        }
+        .smudge {
+            position: absolute;
+            background: radial-gradient(circle, rgba(100, 100, 100, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 5;
+            filter: blur(8px)
+        }
+        .dark .smudge {
+             background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+        }
+        .ink-stamp {
+            filter: drop-shadow(0 0 1px rgba(185, 28, 28, 0.4))
+        }
+        @keyframes flutter {
+            0%, 100% { transform: rotate(-3deg) translateY(0); }
+            50% { transform: rotate(-1deg) translateY(-2px); }
+        }
+        @keyframes flutter-alt {
+            0%, 100% { transform: rotate(3deg) translateY(0); }
+            50% { transform: rotate(1deg) translateY(-2px); }
+        }
+        .sticky-note {
+            box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: flutter 6s ease-in-out infinite
+        }
+        .sticky-note-alt {
+            animation: flutter-alt 7s ease-in-out infinite
+        }
+        .sticky-note:hover {
+            transform: scale(1.05) rotate(0deg) !important;
+            box-shadow: 10px 15px 25px rgba(0, 0, 0, 0.12);
+            z-index: 30
+        }@keyframes drawStroke {
+            to { stroke-dashoffset: 0; }
+        }
+        @keyframes fadeInk {
+            from {
+                stroke: #6b7280;
+                opacity: 0.8;
+                stroke-width: 1.5px;
+            } to {
+                stroke: #1f2937;
+                opacity: 1;
+                stroke-width: 2px;
+            }
+        }
+        .dark .hw-path { stroke: #e5e7eb; }
+        .dark .hw-anim, .dark .hw-anim-delayed {
+            animation: drawStroke 0.8s ease-out forwards;
+             stroke: #ffffff;
+        }
+        .hw-path {
+            fill: none;
+            stroke: #374151;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round
+        }.hw-anim {
+            stroke-dasharray: 400;
+            stroke-dashoffset: 400;
+            opacity: 0.9;
+            animation: drawStroke 0.8s ease-out forwards, fadeInk 0.5s ease-in forwards;
+            animation-play-state: paused;
+        }
+        body.animations-active .hw-anim {
+            animation-play-state: running;
+        }
+        .hw-L { animation-delay: 0.1s }
+        .hw-a { animation-delay: 0.4s }
+        .hw-b { animation-delay: 0.7s }
+        .hw-N { animation-delay: 1.2s }
+        .hw-o1 { animation-delay: 1.6s }
+        .hw-t { animation-delay: 1.9s }
+        .hw-e { animation-delay: 2.2s }
+        .hw-b2 { animation-delay: 2.5s }
+        .hw-o2 { animation-delay: 2.8s }
+        .hw-o3 { animation-delay: 3.1s }
+        .hw-k { animation-delay: 3.4s }
+        .hw-anim-delayed {
+            animation: drawStroke 2s ease-out forwards, fadeInk 1s ease-in forwards;
+            animation-play-state: paused;
+        }
+        body.animations-active .hw-anim-delayed {
+            animation-play-state: running;
+        }
+        @keyframes drawLine {
+            to { stroke-dashoffset: 0; }
+        }
+        @keyframes pulseNode {
+            0%, 100% { r: 4; opacity: 0.5; }
+            50% { r: 5; opacity: 1; }
+        }
+        .neural-edge {
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            animation: drawLine 2s ease-out forwards
+        }
+        .neural-edge-delay-1 { animation-delay: 0.5s }
+        .neural-edge-delay-2 { animation-delay: 1s }
+        .neural-node { animation: pulseNode 3s infinite ease-in-out }
+        .paper-card {
+            background-image: linear-gradient(to bottom right, #fff, #f3f4f6);
+            transition: transform 0.3s ease, box-shadow 0.3s ease
+        }
+        .dark .paper-card {
+            background-image: none;
+            background-color: transparent;
+            border: 2px solid white;
+            box-shadow: none;
+        }
+        .paper-card:hover {
+            transform: translatey(-5px) rotate(0deg) !important;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            z-index: 20
+        }
+        .pencil-shade {
+            background-size: 10px 10px;
+            opacity: 0;
+            transition: opacity 0.3s
+        }
+        .paper-card:hover .pencil-shade { opacity: 1 }
+        .nav-tab {
+            position: relative;
+            padding: 0.5rem 1.5rem;
+            background-color: #fdfdfd;
+            border: 1px solid #d1d5db;
+            border-bottom: none;
+            border-radius: 6px 6px 0 0;
+            margin-right: -4px;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.02);
+            top: 1px;
+            transition: all 0.2s ease
+        }
+        .dark .nav-tab {
+            background-color: #1e3a8a;
+            border-color: rgba(255,255,255,0.3);
+            color: #e5e7eb;
+        }
+        .nav-tab:hover {
+            transform: translatey(-4px);
+            background-color: #fff;
+            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.05)
+        }
+        .dark .nav-tab:hover {
+            background-color: #172554;
+            color: white;
+        }
+        .nav-tab::before {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: #fdfdfd;
+            z-index: 10
+        }
+        .dark .nav-tab::before {
+            background: #1e3a8a;
+        }
+        .loading-pencil-line {
+            width: 0%;
+            height: 4px;
+            background: #4b5563;
+            border-radius: 2px;
+            position: relative;
+            transition: width 0.1s linear
+        }
+        .loading-pencil-line::after {
+            content: "";
+            position: absolute;
+            right: -10px;
+            top: -14px;
+            width: 32px;
+            height: 32px;
+            background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAINZoQNNvr7xBMEmLul21mmMByDng9H--_rAUmhWTGK3liREj0LK6WUAzwPptymhrDIup8_He_yhjhGeYs-noHNoNOg_JwnvWXEeLTlWQ1qheAOXFrVqFvWx2SZFcfMRN0ZZFKsPfZYfhhH4suu-R5GyqFxJUWayGKaKaMrwfgnGJctyWuR_r2of0DOPNAxvS1lS2hyVWxAi1N4Acb68VzcruIJxIldDPfgd7YML5ISuDP4nxHmgFgbFkXtlytWDdjthtRQR3Tg0gP);
+            background-repeat: no-repeat
+        }
+        @keyframes sketchNotebook {
+            0% { stroke-dashoffset: 1000; }
+            100% { stroke-dashoffset: 0; }
+        }
+        .sketch-notebook-path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: sketchNotebook 2.5s ease-in-out forwards
+        }
+        .index-item:hover .index-dots {
+            border-bottom-style: solid;
+            opacity: 1
+        }
+        .index-item:hover .index-pg {
+            transform: translatex(5px);
+            color: #15803d
+        }
+        .chalk-brush {
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"white\"><circle cx=\"12\" cy=\"12\" r=\"6\"/></svg>") 12 12, crosshair
+        }
+        .eraser-brush {
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"white\" stroke-width=\"2\"><rect x=\"4\" y=\"4\" width=\"16\" height=\"16\"/></svg>") 16 16, crosshair
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
+        .crt-screen {
+            background: linear-gradient(rgba(18, 16, 16, 0.1) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 3px, 3px 100%;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.5);
+        }
+        .crt-flicker {
+            animation: textFlicker 0.1s infinite;
+        }
+        @keyframes textFlicker {
+            0% { opacity: 0.95; }
+            100% { opacity: 1; }
+        }.dimension-line {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            position: relative;
+            padding: 1rem 0;
+            overflow: hidden;
+            opacity: 0.6;
+        }
+        .dark .dimension-line {
+            opacity: 0.8;
+            color: white;
+        }
+        .dim-arrow-left, .dim-arrow-right {
+            flex-grow: 1;
+            height: 1px;
+            background-color: var(--dim-line);
+            position: relative;
+        }
+        .dim-arrow-left::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: -3px;
+            width: 0; 
+            height: 0; 
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent; 
+            border-right: 8px solid var(--dim-line);
+        }
+        .dim-arrow-right::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -3px;
+            width: 0; 
+            height: 0; 
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent; 
+            border-left: 8px solid var(--dim-line);
+        }
+        .dim-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            padding: 0 10px;
+            color: var(--pencil-gray);
+            background: transparent;
+        }
+        .dark .dim-label { color: #cbd5e1; }
+        .dim-vert-start, .dim-vert-end {
+            width: 1px;
+            height: 20px;
+            background-color: var(--dim-line);
+        }
+        .photo-corner {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            z-index: 20;
+            pointer-events: none;
+        }
+        .photo-corner::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-style: solid;
+            border-color: rgba(0,0,0,0.7);
+        }
+        .photo-corner.tl { top: -2px; left: -2px; border-top: 4px solid #333; border-left: 4px solid #333; }
+        .photo-corner.tr { top: -2px; right: -2px; border-top: 4px solid #333; border-right: 4px solid #333; }
+        .photo-corner.bl { bottom: -2px; left: -2px; border-bottom: 4px solid #333; border-left: 4px solid #333; }
+        .photo-corner.br { bottom: -2px; right: -2px; border-bottom: 4px solid #333; border-right: 4px solid #333; }
+        .dark .photo-corner.tl { border-color: #fff; }
+        .dark .photo-corner.tr { border-color: #fff; }
+        .dark .photo-corner.bl { border-color: #fff; }
+        .dark .photo-corner.br { border-color: #fff; }
+        .iso-symbol {
+            border: 2px solid currentColor;
+            border-radius: 4px;padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .dark .text-gray-800 { color: #f3f4f6; }
+        .dark .text-gray-700 { color: #e5e7eb; }
+        .dark .text-gray-600 { color: #9ca3af; }
+        .dark .text-gray-500 { color: #9ca3af; }
+        .dark .border-gray-200, .dark .border-gray-300 { border-color: rgba(255,255,255,0.2); }
+        .dark .bg-white { background-color: transparent; }
+        .dark .bg-gray-50, .dark .bg-stone-100 { background-color: rgba(0,0,0,0.2); }
+        .dark .paper-card { color: white; }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "rxjs": "https://esm.sh/rxjs@^7.8.2?conditions=es2015",
+    "rxjs/operators": "https://esm.sh/rxjs@^7.8.2/operators?conditions=es2015",
+    "rxjs/ajax": "https://esm.sh/rxjs@^7.8.2/ajax?conditions=es2015",
+    "rxjs/webSocket": "https://esm.sh/rxjs@^7.8.2/webSocket?conditions=es2015",
+    "rxjs/testing": "https://esm.sh/rxjs@^7.8.2/testing?conditions=es2015",
+    "rxjs/fetch": "https://esm.sh/rxjs@^7.8.2/fetch?conditions=es2015",
+    "@angular/platform-browser": "https://esm.sh/@angular/platform-browser@^21.1.0?external=rxjs",
+    "@angular/core": "https://esm.sh/@angular/core@^21.1.0?external=rxjs",
+    "@angular/common": "https://esm.sh/@angular/common@^21.1.0?external=rxjs",
+    "@angular/compiler": "https://esm.sh/@angular/compiler@^21.1.0?external=rxjs",
+    "@angular/forms": "https://esm.sh/@angular/forms@^21.1.0?external=rxjs"
+  }
+}
+</script>
+</head>
+<body class="paper-grain text-gray-800 font-display selection:bg-yellow-100 overflow-x-hidden transition-colors duration-500">
+    <app-root></app-root>
+</body>
+</html>

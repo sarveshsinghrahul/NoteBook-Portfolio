@@ -1,0 +1,752 @@
+
+<app-loading-screen></app-loading-screen>
+
+<!-- Dark Mode Toggle -->
+<label class="fixed top-24 right-8 z-[90] cursor-pointer group" for="dark-mode-toggle">
+    <input class="hidden" id="dark-mode-toggle" (change)="toggleDarkMode($event)" type="checkbox"/>
+    <div class="relative w-20 h-20 rounded-full border-4 border-blue-800/80 bg-white/10 backdrop-blur-sm shadow-lg flex items-center justify-center rotate-12 group-hover:rotate-0 transition-all duration-300 ink-stamp dark:border-white/80">
+        <div class="absolute inset-0 border-2 border-dashed border-blue-800/50 rounded-full m-1 dark:border-white/50"></div>
+        <div class="flex flex-col items-center">
+            <span class="material-symbols-outlined text-blue-900 dark:text-white text-3xl">nightlight</span>
+            <span class="font-mono text-[8px] font-bold text-blue-900 dark:text-white uppercase tracking-tighter mt-1">NIGHT SHIFT</span>
+        </div>
+    </div>
+</label>
+
+<!-- Resume Slide-out -->
+<input class="peer hidden" id="resume-toggle" type="checkbox"/>
+<label class="fixed top-[-10px] right-20 md:right-32 z-[80] cursor-pointer transition-all duration-500 peer-checked:-translate-y-40 hover:translate-y-1 group" for="resume-toggle">
+    <div class="bg-[#fcfcfb] w-14 h-24 rounded-b-md shadow-md border border-gray-300 border-t-0 flex flex-col items-center justify-end pb-3 relative overflow-hidden transform rotate-2 group-hover:rotate-0 transition-transform">
+        <div class="absolute top-4 left-0 w-full h-px bg-gray-200"></div>
+        <span class="font-hand text-xs text-pencil font-bold tracking-widest [writing-mode:vertical-rl] rotate-180 opacity-60 group-hover:opacity-100 transition-opacity">RESUME</span>
+        <div class="absolute inset-0 bg-gradient-to-b from-gray-100/50 to-transparent pointer-events-none"></div>
+    </div>
+</label>
+
+<div class="fixed inset-0 z-[100] flex justify-center pointer-events-none perspective-[1000px]">
+    <label class="absolute inset-0 bg-stone-900/40 backdrop-blur-sm opacity-0 transition-opacity duration-500 peer-checked:opacity-100 peer-checked:pointer-events-auto cursor-pointer" for="resume-toggle"></label>
+    <div class="relative w-[210mm] max-w-[95vw] h-[90vh] mt-4 bg-[#fdfdfd] shadow-2xl transform -translate-y-[150%] transition-transform duration-700 ease-in-out peer-checked:translate-y-0 peer-checked:pointer-events-auto overflow-hidden rounded-sm rotate-1 paper-texture border border-gray-200">
+        <a class="absolute -top-3 right-10 md:right-16 z-20 hover:-translate-y-1 transition-transform group" href="#" title="Download PDF">
+            <svg class="drop-shadow-sm" height="80" viewBox="0 0 50 100" width="40">
+                <path class="group-hover:stroke-gray-900 transition-colors" d="M15,30 L15,75 A12,12 0 0,0 39,75 L39,20 A8,8 0 0,0 23,20 L23,65" fill="none" stroke="#6b7280" stroke-linecap="round" stroke-width="4"></path>
+            </svg>
+        </a>
+        <div class="h-full overflow-y-auto custom-scrollbar p-6 md:p-12 relative z-10">
+            <label class="absolute top-6 left-6 cursor-pointer text-gray-400 hover:text-red-500 transition-colors z-50 p-2" for="resume-toggle">
+                <span class="material-symbols-outlined text-3xl">close</span>
+            </label>
+            <div class="text-center mb-12 border-b-2 border-gray-800 pb-6 border-dashed mt-8 md:mt-0">
+                <!-- Editable Name -->
+                <input [(ngModel)]="resumeData().name" class="resume-input font-hand text-5xl md:text-6xl font-bold text-gray-800 mb-2 text-center" />
+                <!-- Editable Title -->
+                <input [(ngModel)]="resumeData().title" class="resume-input font-hand text-xl text-gray-500 tracking-widest uppercase text-center" />
+            </div>
+            <div class="grid md:grid-cols-[1fr_2fr] gap-10 font-hand text-gray-800">
+                <div class="space-y-10">
+                    <section>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4 border-l-4 border-red-400 pl-3">Education</h2>
+                        <div class="mb-4 space-y-1">
+                            <input [(ngModel)]="resumeData().education.degree" class="resume-input font-bold text-lg" />
+                            <input [(ngModel)]="resumeData().education.university" class="resume-input text-gray-600 italic" />
+                            <input [(ngModel)]="resumeData().education.years" class="resume-input text-sm text-gray-400" />
+                            <input [(ngModel)]="resumeData().education.gpa" class="resume-input text-sm text-green-700 mt-1" />
+                        </div>
+                    </section>
+                    <section>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4 border-l-4 border-blue-400 pl-3">Skills</h2>
+                        <ul class="space-y-2 text-gray-700">
+                            @for (skill of resumeData().skills; track $index) {
+                                <li class="flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-sm text-green-600">check</span>
+                                    <input [(ngModel)]="skill.name" class="resume-input" />
+                                </li>
+                            }
+                        </ul>
+                    </section>
+                    <section>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4 border-l-4 border-yellow-400 pl-3">Contact</h2>
+                        <ul class="text-sm space-y-3 text-gray-600">
+                            <li class="flex items-center gap-2 hover:text-blue-600 transition-colors">
+                                <span class="material-symbols-outlined text-lg">mail</span>
+                                <input [(ngModel)]="resumeData().contact.email" class="resume-input" />
+                            </li>
+                            <li class="flex items-center gap-2 hover:text-blue-600 transition-colors">
+                                <span class="material-symbols-outlined text-lg">language</span>
+                                <input [(ngModel)]="resumeData().contact.website" class="resume-input" />
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-lg">location_on</span>
+                                <input [(ngModel)]="resumeData().contact.location" class="resume-input" />
+                            </li>
+                        </ul>
+                    </section>
+                </div>
+                <div class="space-y-10">
+                    <section>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                            <span class="material-symbols-outlined">engineering</span>
+                            Technical Experience
+                        </h2>
+                        <div class="relative pl-6 border-l-2 border-gray-300 space-y-8">
+                            @for (exp of resumeData().experience; track $index) {
+                                <div class="relative group">
+                                    <div class="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-white border-4 border-gray-400 group-hover:border-blue-500 transition-colors"></div>
+                                    <input [(ngModel)]="exp.role" class="resume-input text-xl font-bold" />
+                                    <input [(ngModel)]="exp.company" class="resume-input text-sm text-gray-500 mb-2 font-display uppercase tracking-wide" />
+                                    <textarea [(ngModel)]="exp.description" class="resume-textarea text-gray-700 leading-relaxed h-24"></textarea>
+                                </div>
+                            }
+                        </div>
+                    </section>
+                    <section>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                            <span class="material-symbols-outlined">folder_special</span>
+                            Key Projects
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            @for (proj of resumeData().projects; track $index) {
+                                <div class="p-4 bg-gray-50 border border-gray-200 rounded-sm hover:rotate-0 transition-transform" [class.rotate-1]="$index % 2 === 0" [class.-rotate-1]="$index % 2 !== 0">
+                                    <input [(ngModel)]="proj.name" class="resume-input font-bold" />
+                                    <textarea [(ngModel)]="proj.description" class="resume-textarea text-sm text-gray-600 mt-1 h-16"></textarea>
+                                </div>
+                            }
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <div class="mt-16 text-center opacity-40">
+                <div class="inline-block border-4 border-red-800 p-2 rotate-12 mask-image">
+                    <span class="text-2xl font-black text-red-800 uppercase tracking-widest">Confidential</span>
+                </div>
+            </div>
+        </div>
+        <div class="absolute top-[33%] left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent opacity-50 pointer-events-none"></div>
+        <div class="absolute top-[66%] left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent opacity-50 pointer-events-none"></div>
+    </div>
+</div>
+
+<div class="site-wrapper w-full min-h-screen transition-colors duration-500">
+    <div class="bg-comp-pad min-h-screen flex flex-col w-full relative">
+        <div class="smudge w-32 h-32 top-20 right-10"></div>
+        <div class="smudge w-40 h-20 bottom-40 left-20 opacity-30"></div>
+        <div class="smudge w-24 h-24 top-1/2 left-10 opacity-20"></div>
+        <div class="fixed top-40 left-10 opacity-10 pointer-events-none z-0 doodle-gear animate-[spin_12s_linear_infinite]">
+            <span class="material-symbols-outlined text-7xl text-gray-600">settings</span>
+        </div>
+        <div class="fixed bottom-40 right-10 opacity-10 pointer-events-none z-0 doodle-bulb animate-pulse">
+            <span class="material-symbols-outlined text-7xl text-gray-600">lightbulb</span>
+        </div>
+
+        <header class="w-full border-b border-gray-200/50 bg-white/60 dark:bg-slate-900/50 backdrop-blur-[2px] sticky top-0 z-[50] pt-2">
+            <div class="max-w-[1000px] mx-auto px-6 flex items-end justify-between h-14">
+                <div class="flex items-center gap-3 opacity-60 hover:opacity-100 transition-opacity cursor-pointer pb-3 text-gray-800 dark:text-gray-200">
+                    <span class="material-symbols-outlined text-xl">folder_open</span>
+                    <span class="font-hand text-xs uppercase tracking-widest">Confidential // {{ resumeData().name }}</span>
+                </div>
+                <nav class="hidden md:flex items-end gap-1 translate-y-[1px]">
+                    <a class="nav-tab font-hand text-sm text-gray-600 hover:text-green-800 cursor-pointer" (click)="scrollTo('index')">Index</a>
+                    <a class="nav-tab font-hand text-sm text-gray-600 hover:text-green-800 cursor-pointer" (click)="scrollTo('archive')">Projects</a>
+                    <a class="nav-tab font-hand text-sm text-gray-600 hover:text-green-800 cursor-pointer" (click)="scrollTo('about')">About</a>
+                    <a class="nav-tab font-hand text-sm text-gray-600 hover:text-green-800 cursor-pointer" (click)="scrollTo('snapshots')">Snapshots</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="relative z-10 w-full max-w-[1000px] mx-auto flex flex-col">
+            <!-- INDEX SECTION -->
+            <section class="min-h-[90vh] flex flex-col justify-center px-6 py-12 relative border-l border-r border-dashed border-gray-300 dark:border-white/20 bg-white/40 dark:bg-slate-800/20 shadow-sm mx-0 md:mx-10 my-10 backdrop-blur-sm" id="index">
+                <div class="absolute top-8 right-8 font-hand text-xs text-gray-400 text-right">
+                    NOTEBOOK NO. 42<br/>
+                    PAGE: 001 - INDEX
+                </div>
+                <div class="mb-16 mt-8 text-center md:text-left">
+                    <svg class="w-full h-32 md:h-48 pointer-events-none" viewBox="0 0 750 120">
+                        <g transform="translate(40, 80) scale(1.8)">
+                            <path class="hw-path hw-anim hw-L" d="M10,-40 L10,0 L30,0"></path>
+                            <path class="hw-path hw-anim hw-a" d="M45,-10 C40,-10 35,-5 35,0 C35,5 40,10 45,10 C50,10 55,5 55,0 M55,-10 L55,10"></path>
+                            <path class="hw-path hw-anim hw-b" d="M65,-40 L65,10 C65,10 70,10 75,5 C80,0 75,-10 65,-10"></path>
+                            <path class="hw-path hw-anim hw-N" d="M100,10 L100,-40 L120,10 L120,-40"></path>
+                            <path class="hw-path hw-anim hw-o1" d="M135,-5 C135,-15 155,-15 155,-5 C155,5 135,5 135,-5 M145,-10 L155,-15"></path>
+                            <path class="hw-path hw-anim hw-t" d="M170,-30 L170,5 C170,10 175,10 180,5 M160,-15 L180,-15"></path>
+                            <path class="hw-path hw-anim hw-e" d="M190,0 L210,0 C210,-15 190,-15 190,0 C190,10 210,10 210,5"></path>
+                            <path class="hw-path hw-anim hw-b2" d="M225,-40 L225,10 C225,10 230,10 235,5 C240,0 235,-10 225,-10"></path>
+                            <path class="hw-path hw-anim hw-o2" d="M250,-5 C250,-15 270,-15 270,-5 C270,5 250,5 250,-5 M260,-10 L270,-15"></path>
+                            <path class="hw-path hw-anim hw-o3" d="M280,-5 C280,-15 300,-15 300,-5 C300,5 280,5 280,-5 M290,-10 L300,-15"></path>
+                            <path class="hw-path hw-anim hw-k" d="M315,-40 L315,10 M330,-20 L315,-5 L335,10"></path>
+                        </g>
+                    </svg>
+                    <p class="text-center md:text-left font-hand text-gray-500 italic mt-2 text-xl pl-12">"A collection of experiments, failures, and discoveries."</p>
+                </div>
+                <div class="max-w-2xl mx-auto w-full space-y-6 pl-4">
+                    <div class="mb-8 inline-block border-b-2 border-gray-800 dark:border-white pb-2">
+                        <svg height="50" viewBox="0 0 320 50" width="320">
+                            <text class="font-hand text-3xl font-bold fill-gray-800 dark:fill-white tracking-wider hw-anim-delayed" fill="none" stroke="currentColor" stroke-width="1" style="stroke-dasharray: 500; stroke-dashoffset: 500;" x="0" y="35">TABLE OF CONTENTS</text>
+                        </svg>
+                    </div>
+                    <a class="index-item group flex items-baseline justify-between w-full cursor-pointer" (click)="scrollTo('research')">
+                        <span class="font-hand text-xl md:text-2xl text-gray-800 dark:text-gray-100 group-hover:text-green-800 dark:group-hover:text-green-400 transition-colors">01. Current Research</span>
+                        <div class="index-dots flex-grow mx-4 border-b-2 border-dotted border-gray-300 dark:border-gray-600 relative top-[-6px] opacity-40 transition-all"></div>
+                        <span class="index-pg font-hand text-xl text-gray-500 transition-transform">pg. 014</span>
+                    </a>
+                    <a class="index-item group flex items-baseline justify-between w-full cursor-pointer" (click)="scrollTo('archive')">
+                        <span class="font-hand text-xl md:text-2xl text-gray-800 dark:text-gray-100 group-hover:text-green-800 dark:group-hover:text-green-400 transition-colors">02. Project Archive</span>
+                        <div class="index-dots flex-grow mx-4 border-b-2 border-dotted border-gray-300 dark:border-gray-600 relative top-[-6px] opacity-40 transition-all"></div>
+                        <span class="index-pg font-hand text-xl text-gray-500 transition-transform">pg. 028</span>
+                    </a>
+                    <a class="index-item group flex items-baseline justify-between w-full cursor-pointer" (click)="scrollTo('skills')">
+                        <span class="font-hand text-xl md:text-2xl text-gray-800 dark:text-gray-100 group-hover:text-green-800 dark:group-hover:text-green-400 transition-colors">03. Core Competencies</span>
+                        <div class="index-dots flex-grow mx-4 border-b-2 border-dotted border-gray-300 dark:border-gray-600 relative top-[-6px] opacity-40 transition-all"></div>
+                        <span class="index-pg font-hand text-xl text-gray-500 transition-transform">pg. 042</span>
+                    </a>
+                    <a class="index-item group flex items-baseline justify-between w-full cursor-pointer" (click)="scrollTo('about')">
+                        <span class="font-hand text-xl md:text-2xl text-gray-800 dark:text-gray-100 group-hover:text-green-800 dark:group-hover:text-green-400 transition-colors">04. About Me</span>
+                        <div class="index-dots flex-grow mx-4 border-b-2 border-dotted border-gray-300 dark:border-gray-600 relative top-[-6px] opacity-40 transition-all"></div>
+                        <span class="index-pg font-hand text-xl text-gray-500 transition-transform">pg. 050</span>
+                    </a>
+                    <a class="index-item group flex items-baseline justify-between w-full cursor-pointer" (click)="scrollTo('snapshots')">
+                        <span class="font-hand text-xl md:text-2xl text-gray-800 dark:text-gray-100 group-hover:text-green-800 dark:group-hover:text-green-400 transition-colors">05. Snapshots</span>
+                        <div class="index-dots flex-grow mx-4 border-b-2 border-dotted border-gray-300 dark:border-gray-600 relative top-[-6px] opacity-40 transition-all"></div>
+                        <span class="index-pg font-hand text-xl text-gray-500 transition-transform">pg. 058</span>
+                    </a>
+                </div>
+                <div class="mt-16 ml-4 pt-16 font-hand text-gray-400 text-sm italic">
+                    *Entries marked with graphite are pending peer review.
+                </div>
+            </section>
+
+            <!-- 1200mm -->
+            <div class="dimension-line">
+                <div class="dim-vert-start"></div>
+                <div class="dim-arrow-left"></div>
+                <div class="dim-label">1200mm</div>
+                <div class="dim-arrow-right"></div>
+                <div class="dim-vert-end"></div>
+            </div>
+
+            <!-- RESEARCH SECTION -->
+            <section class="py-24 px-6 relative" id="research">
+                <div class="absolute -left-4 top-20 bg-sticky-yellow w-48 h-12 -rotate-90 origin-bottom-left shadow-md flex items-center justify-center border-l-4 border-yellow-300/50">
+                    <span class="font-hand font-bold text-gray-700 tracking-widest">ACTIVE STUDY</span>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <div>
+                        <span class="font-hand text-green-700 dark:text-green-400 font-bold tracking-wider text-sm mb-2 block">ENTRY: #883-B</span>
+                        <h2 class="font-hand text-5xl font-bold mb-6 text-gray-800 dark:text-white">Current Research</h2>
+                        <p class="font-hand text-xl text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
+                            Developing a lightweight Convolutional Neural Network (CNN) architecture optimized for low-power microcontrollers. 
+                        </p>
+                        <p class="font-hand text-lg text-gray-500 italic border-l-2 border-pencil pl-4">
+                            "The goal is to enable real-time gesture recognition on devices with less than 256KB RAM."
+                        </p>
+                        <div class="mt-8 flex gap-4">
+                            <div class="px-4 py-2 border border-gray-300 rounded bg-white dark:bg-slate-700 dark:text-white dark:border-slate-600 font-hand text-sm shadow-sm rotate-1">TensorFlow Lite</div>
+                            <div class="px-4 py-2 border border-gray-300 rounded bg-white dark:bg-slate-700 dark:text-white dark:border-slate-600 font-hand text-sm shadow-sm -rotate-2">ESP32-S3</div>
+                        </div>
+                    </div>
+                    <div class="relative bg-white dark:bg-slate-900/50 p-8 border-2 border-gray-200 dark:border-white/20 rounded-sm shadow-sm transform rotate-1 hover:rotate-0 transition-transform duration-500 group cursor-crosshair">
+                        <div class="absolute -top-3 -right-3 bg-white dark:bg-slate-800 border border-gray-300 dark:border-white/30 px-2 py-1 font-hand text-xs z-10 shadow-sm dark:text-white">FIG 1.4: ARCHITECTURE</div>
+                        <div class="w-full aspect-video border border-dashed border-gray-200 dark:border-gray-600 bg-gray-50/50 dark:bg-slate-800/30 flex items-center justify-center overflow-hidden">
+                            <svg class="w-full h-full p-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 200 120">
+                                <!-- Input Nodes (Always visible) -->
+                                <circle class="text-blue-500 fill-blue-50 neural-node" cx="30" cy="30" r="4"></circle>
+                                <circle class="text-blue-500 fill-blue-50 neural-node" cx="30" cy="60" r="4"></circle>
+                                <circle class="text-blue-500 fill-blue-50 neural-node" cx="30" cy="90" r="4"></circle>
+                                
+                                <!-- Edges Layer 1 (Visible on hover, delay 1) -->
+                                <g class="text-gray-400 opacity-0 group-hover:opacity-60 transition-opacity duration-500 ease-in-out delay-100">
+                                    <path class="neural-edge" d="M34 30 L96 20"></path>
+                                    <path class="neural-edge" d="M34 30 L96 60"></path>
+                                    <path class="neural-edge" d="M34 60 L96 20"></path>
+                                    <path class="neural-edge" d="M34 60 L96 60"></path>
+                                    <path class="neural-edge" d="M34 60 L96 100"></path>
+                                    <path class="neural-edge" d="M34 90 L96 60"></path>
+                                    <path class="neural-edge" d="M34 90 L96 100"></path>
+                                </g>
+
+                                <!-- Hidden Nodes (Visible on hover, delay 3) -->
+                                <g class="opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out delay-300">
+                                    <circle class="text-purple-500 fill-purple-50 neural-node" cx="100" cy="20" r="5"></circle>
+                                    <circle class="text-purple-500 fill-purple-50 neural-node" cx="100" cy="60" r="5"></circle>
+                                    <circle class="text-purple-500 fill-purple-50 neural-node" cx="100" cy="100" r="5"></circle>
+                                </g>
+
+                                <!-- Edges Layer 2 (Visible on hover, delay 3) -->
+                                <g class="text-gray-400 opacity-0 group-hover:opacity-60 transition-opacity duration-500 ease-in-out delay-500">
+                                    <path class="neural-edge" d="M105 20 L164 60"></path>
+                                    <path class="neural-edge" d="M105 60 L164 60"></path>
+                                    <path class="neural-edge" d="M105 100 L164 60"></path>
+                                </g>
+
+                                <!-- Output Node (Visible on hover, delay 4) -->
+                                <g class="opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out delay-700">
+                                    <circle class="text-red-500 fill-red-50 neural-node" cx="170" cy="60" r="6"></circle>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2450mm -->
+            <div class="dimension-line">
+                <div class="dim-vert-start"></div>
+                <div class="dim-arrow-left"></div>
+                <div class="dim-label">2450mm</div>
+                <div class="dim-arrow-right"></div>
+                <div class="dim-vert-end"></div>
+            </div>
+
+            <!-- ARCHIVE SECTION -->
+            <section class="py-24 px-6" id="archive">
+                <div class="flex items-center justify-between mb-16 border-b-2 border-gray-800 dark:border-white pb-4">
+                    <svg class="w-full md:w-auto h-12 md:h-16" height="60" viewBox="0 0 400 60">
+                        <text class="font-hand text-5xl font-bold fill-gray-800 dark:fill-white hw-anim-delayed" fill="none" stroke="currentColor" stroke-width="1" style="stroke-dasharray: 500; stroke-dashoffset: 500;" x="0" y="45">Project Archive</text>
+                    </svg>
+                    <span class="font-hand text-gray-400">Box_04 // 2023-2024</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 px-4">
+                    <div class="group relative w-full aspect-[3/4]">
+                        <div class="paper-card absolute inset-0 bg-white border border-gray-200 shadow-md p-6 flex flex-col rotate-2 origin-top-left dark:text-white">
+                            <div class="pencil-shade absolute inset-0 pointer-events-none"></div>
+                            <div class="flex justify-between items-start mb-4 opacity-50">
+                                <span class="material-symbols-outlined text-4xl">hand_gesture</span>
+                                <span class="font-hand text-xs border border-gray-400 px-1">ML // 2.1</span>
+                            </div>
+                            <h3 class="font-hand text-2xl font-bold mb-2">ASL Recognition</h3>
+                            <div class="w-full h-px bg-gray-300 dark:bg-white/30 mb-4"></div>
+                            <p class="font-hand text-gray-600 dark:text-gray-300 text-sm leading-relaxed flex-grow">
+                                ML model for sign language detection. Optimized for real-time inference on edge devices.
+                            </p>
+                            <div class="mt-auto">
+                                <div class="font-hand text-xs text-gray-400">Status: Completed</div>
+                                <div class="w-full h-2 bg-gray-100 dark:bg-white/20 mt-1 rounded-full overflow-hidden">
+                                    <div class="w-[98%] h-full bg-green-500/50"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="group relative w-full aspect-[3/4] mt-8 md:mt-0">
+                        <div class="paper-card absolute inset-0 bg-white border border-gray-200 shadow-md p-6 flex flex-col -rotate-1 origin-top-right dark:text-white">
+                            <div class="pencil-shade absolute inset-0 pointer-events-none"></div>
+                            <div class="flex justify-between items-start mb-4 opacity-50">
+                                <span class="material-symbols-outlined text-4xl">smart_toy</span>
+                                <span class="font-hand text-xs border border-gray-400 px-1">RL // EXP</span>
+                            </div>
+                            <h3 class="font-hand text-2xl font-bold mb-2">RL Agent</h3>
+                            <div class="w-full h-px bg-gray-300 dark:bg-white/30 mb-4"></div>
+                            <p class="font-hand text-gray-600 dark:text-gray-300 text-sm leading-relaxed flex-grow">
+                                An actor learning to walk and solve mazes using Proximal Policy Optimization.
+                            </p>
+                            <div class="mt-auto">
+                                <div class="font-hand text-xs text-gray-400">Status: Training</div>
+                                <div class="w-full h-2 bg-gray-100 dark:bg-white/20 mt-1 rounded-full overflow-hidden">
+                                    <div class="w-[65%] h-full bg-yellow-500/50"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="absolute -bottom-4 -right-4 sticky-note bg-sticky-blue p-3 w-32 rotate-6 z-30 shadow-md">
+                            <p class="font-hand text-xs text-blue-900">Reward function needs tuning.</p>
+                        </div>
+                    </div>
+                    <div class="group relative w-full aspect-[3/4] mt-8 lg:mt-0">
+                        <div class="paper-card absolute inset-0 bg-white border border-gray-200 shadow-md p-6 flex flex-col rotate-3 origin-bottom-right dark:text-white">
+                            <div class="pencil-shade absolute inset-0 pointer-events-none"></div>
+                            <div class="flex justify-between items-start mb-4 opacity-50">
+                                <span class="material-symbols-outlined text-4xl">draw</span>
+                                <span class="font-hand text-xs border border-gray-400 px-1">WEB // 3.0</span>
+                            </div>
+                            <h3 class="font-hand text-2xl font-bold mb-2">Portfolio Sketchbook</h3>
+                            <div class="w-full h-px bg-gray-300 dark:bg-white/30 mb-4"></div>
+                            <p class="font-hand text-gray-600 dark:text-gray-300 text-sm leading-relaxed flex-grow">
+                                This immersive web experience. Built to simulate a physical engineering logbook.
+                            </p>
+                            <div class="mt-auto">
+                                <div class="font-hand text-xs text-gray-400">Status: Live</div>
+                                <div class="w-full h-2 bg-gray-100 dark:bg-white/20 mt-1 rounded-full overflow-hidden">
+                                    <div class="w-[100%] h-full bg-blue-500/50"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 1500mm -->
+            <div class="dimension-line">
+                <div class="dim-vert-start"></div>
+                <div class="dim-arrow-left"></div>
+                <div class="dim-label">1500mm</div>
+                <div class="dim-arrow-right"></div>
+                <div class="dim-vert-end"></div>
+            </div>
+
+            <!-- SKILLS SECTION -->
+            <section class="py-24 px-6 border-t border-dashed border-gray-300 dark:border-white/20 mt-12" id="skills">
+                <div class="max-w-4xl mx-auto">
+                    <div class="mb-12">
+                        <h2 class="font-hand text-4xl font-bold dark:text-white">Validated Skills</h2>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-y-10 gap-x-8">
+                        <div class="flex flex-col items-center gap-2 group cursor-default">
+                            <div class="iso-symbol w-16 h-16 dark:text-white">
+                                <span class="material-symbols-outlined text-4xl">code</span>
+                            </div>
+                            <span class="font-hand text-xl border-b border-transparent group-hover:border-gray-800 dark:text-gray-200 dark:group-hover:border-white transition-colors">C++</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 group cursor-default">
+                            <div class="iso-symbol w-16 h-16 dark:text-white">
+                                <span class="material-symbols-outlined text-4xl">schema</span>
+                            </div>
+                            <span class="font-hand text-xl border-b border-transparent group-hover:border-gray-800 dark:text-gray-200 dark:group-hover:border-white transition-colors">DSA</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 group cursor-default">
+                            <div class="iso-symbol w-16 h-16 dark:text-white">
+                                <span class="material-symbols-outlined text-4xl">neurology</span>
+                            </div>
+                            <span class="font-hand text-xl border-b border-transparent group-hover:border-gray-800 dark:text-gray-200 dark:group-hover:border-white transition-colors">Machine Learning</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 group cursor-default">
+                            <div class="iso-symbol w-16 h-16 dark:text-white">
+                                <span class="material-symbols-outlined text-4xl">precision_manufacturing</span>
+                            </div>
+                            <span class="font-hand text-xl border-b border-transparent group-hover:border-gray-800 dark:text-gray-200 dark:group-hover:border-white transition-colors">Reinforcement Learning</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 group cursor-default">
+                            <div class="iso-symbol w-16 h-16 dark:text-white">
+                                <span class="material-symbols-outlined text-4xl">html</span>
+                            </div>
+                            <span class="font-hand text-xl border-b border-transparent group-hover:border-gray-800 dark:text-gray-200 dark:group-hover:border-white transition-colors">Web Development</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 group cursor-default">
+                            <div class="iso-symbol w-16 h-16 dark:text-white">
+                                <span class="material-symbols-outlined text-4xl">view_in_ar</span>
+                            </div>
+                            <span class="font-hand text-xl border-b border-transparent group-hover:border-gray-800 dark:text-gray-200 dark:group-hover:border-white transition-colors">Blender</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 group cursor-default md:col-span-3">
+                            <div class="iso-symbol w-16 h-16 dark:text-white">
+                                <span class="material-symbols-outlined text-4xl">movie_edit</span>
+                            </div>
+                            <span class="font-hand text-xl border-b border-transparent group-hover:border-gray-800 dark:text-gray-200 dark:group-hover:border-white transition-colors">Video Editing</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3000mm -->
+            <div class="dimension-line">
+                <div class="dim-vert-start"></div>
+                <div class="dim-arrow-left"></div>
+                <div class="dim-label">3000mm</div>
+                <div class="dim-arrow-right"></div>
+                <div class="dim-vert-end"></div>
+            </div>
+
+            <!-- CHALKBOARD SECTION -->
+            <section class="py-16 px-6 bg-stone-100 dark:bg-transparent border-t border-gray-300 dark:border-white/20" id="blackboard-sandbox">
+                <div class="max-w-[1000px] mx-auto">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="font-hand text-3xl font-bold text-gray-800 dark:text-white">Ideas Sandbox</h3>
+                        <p class="font-hand text-sm text-gray-500">Freehand sketch area</p>
+                    </div>
+                    <app-chalkboard></app-chalkboard>
+                    <div class="mt-4 text-center font-hand text-xs text-gray-400 italic">
+                        *Use the chalk to sketch diagrams. Use the duster to clean up.
+                    </div>
+                </div>
+            </section>
+
+            <!-- ABOUT SECTION -->
+            <section class="py-20 px-6" id="about">
+                <div class="max-w-[800px] mx-auto relative">
+                    <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-32 h-8 bg-white/50 backdrop-blur-sm rotate-2 shadow-sm border border-gray-100 z-10 dark:bg-slate-800/50 dark:border-white/20"></div>
+                    <div class="bg-white p-8 md:p-12 shadow-lg border border-gray-200 rotate-[0.5deg] dark:bg-transparent dark:border-2 dark:border-white dark:text-white">
+                        <h2 class="font-hand text-4xl font-bold mb-6 text-center text-gray-800 dark:text-white">About {{ resumeData().name }}</h2>
+                        <div class="font-hand text-xl text-gray-700 dark:text-gray-300 leading-loose text-center">
+                            <p class="mb-4">
+                                I am a B.Tech student exploring the intersection of <span class="text-green-700 dark:text-green-400 font-bold">Machine Learning</span>, 
+                                <span class="text-blue-700 dark:text-blue-400 font-bold">Reinforcement Learning</span>, and <span class="text-purple-700 dark:text-purple-400 font-bold">Creative Design</span>.
+                            </p>
+                            <p>
+                                My passion lies in solving complex engineering problems through code while maintaining an artistic perspective on how we interact with technology.
+                            </p>
+                        </div>
+                        <div class="mt-8 flex justify-center">
+                            <span class="material-symbols-outlined text-4xl text-gray-400 animate-bounce">keyboard_double_arrow_down</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 1800mm -->
+            <div class="dimension-line">
+                <div class="dim-vert-start"></div>
+                <div class="dim-arrow-left"></div>
+                <div class="dim-label">1800mm</div>
+                <div class="dim-arrow-right"></div>
+                <div class="dim-vert-end"></div>
+            </div>
+
+            <!-- SNAPSHOTS SECTION -->
+            <section class="py-24 px-6 relative border-t border-dashed border-gray-300 dark:border-white/20" id="snapshots">
+                <div class="max-w-[1000px] mx-auto">
+                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-16 gap-4">
+                        <h2 class="font-hand text-4xl font-bold text-gray-800 dark:text-white flex items-center gap-3">
+                            <span class="text-gray-400 text-2xl font-normal">05.</span> Snapshots
+                        </h2>
+                        <span class="font-hand text-gray-400 text-sm italic">Visual Log // REF-2024</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 p-4">
+                        <div class="relative group cursor-pointer perspective-1000">
+                            <div class="bg-white dark:bg-transparent dark:border dark:border-white p-3 pb-8 shadow-md transform rotate-2 transition-all duration-500 ease-out group-hover:scale-105 group-hover:rotate-[-3deg] group-hover:shadow-2xl group-hover:z-20 relative border border-gray-100 dark:text-white">
+                                <div class="photo-corner tl"></div>
+                                <div class="photo-corner tr"></div>
+                                <div class="photo-corner bl"></div>
+                                <div class="photo-corner br"></div>
+                                <div class="aspect-square bg-gray-50 dark:bg-slate-800 overflow-hidden border border-gray-200 dark:border-gray-700 relative">
+                                    <svg class="w-full h-full p-6 text-gray-700 dark:text-white" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 200 200">
+                                        <path class="dark:fill-slate-700 dark:stroke-white" d="M100 40 L160 70 L160 140 L100 170 L40 140 L40 70 Z" fill="#f3f4f6" stroke="#4b5563"></path>
+                                        <path class="dark:stroke-white" d="M100 40 L100 100 L160 70" stroke="#4b5563"></path>
+                                        <path class="dark:stroke-white" d="M100 100 L40 70" stroke="#4b5563"></path>
+                                        <path class="dark:stroke-white" d="M100 100 L100 170" stroke="#4b5563"></path>
+                                        <path d="M180 180 L150 180" stroke="#ef4444" stroke-width="2"></path>
+                                        <path d="M180 180 L180 150" stroke="#3b82f6" stroke-width="2"></path>
+                                        <path d="M180 180 L160 160" stroke="#22c55e" stroke-width="2"></path>
+                                        <text fill="#9ca3af" font-family="sans-serif" font-size="10" text-anchor="middle" x="100" y="195">ORTHOGRAPHIC</text>
+                                    </svg>
+                                    <div class="absolute top-2 left-2 text-[8px] font-mono text-gray-400">VIEW: PERSP</div>
+                                </div>
+                                <div class="mt-4 px-2 font-hand text-center text-gray-600 dark:text-gray-300 leading-tight">
+                                    <span class="block text-xs text-gray-400 mb-1 tracking-widest uppercase">Fig A.1</span>
+                                    <span class="text-sm">Blender Render: Mech-Arm Concept v2</span>
+                                </div>
+                            </div>
+                        </div>
+                        <label class="relative group cursor-pointer perspective-1000 mt-6 md:mt-0 block" for="rl-video-toggle">
+                            <div class="bg-white dark:bg-transparent dark:border dark:border-white p-3 pb-8 shadow-md transform -rotate-1 transition-all duration-500 ease-out group-hover:scale-105 group-hover:rotate-[2deg] group-hover:shadow-2xl group-hover:z-20 relative border border-gray-100 dark:text-white">
+                                <div class="photo-corner tl"></div>
+                                <div class="photo-corner tr"></div>
+                                <div class="photo-corner bl"></div>
+                                <div class="photo-corner br"></div>
+                                <div class="aspect-square bg-slate-50 dark:bg-slate-800 overflow-hidden border border-gray-200 dark:border-gray-700 relative">
+                                    <div class="absolute inset-0 z-40 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[1px]">
+                                        <svg class="w-16 h-16 drop-shadow-xl transform group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 100 100">
+                                            <path class="dark:stroke-white" d="M50 10 C25 10 10 25 10 50 C10 75 25 90 50 90 C75 90 90 75 90 50 C90 25 75 10 50 10 M52 8 C80 8 92 28 92 50 C92 72 78 92 50 92 C22 92 8 72 8 50 C8 28 22 8 50 8" opacity="0.8" stroke="#374151" stroke-linecap="round" stroke-width="3"></path>
+                                            <path class="dark:stroke-white" d="M40 30 L70 50 L40 70 Z" fill="rgba(255,255,255,0.9)" stroke="#374151" stroke-linejoin="round" stroke-width="3"></path>
+                                            <path class="dark:stroke-white" d="M38 32 L38 68 L66 50 Z" opacity="0.6" stroke="#374151" stroke-linejoin="round" stroke-width="1"></path>
+                                        </svg>
+                                        <span class="absolute mt-24 font-hand font-bold text-gray-800 text-lg bg-white/80 px-2 rotate-2 shadow-sm border border-gray-300">PLAY SIM</span>
+                                    </div>
+                                    <svg class="w-full h-full p-4" viewBox="0 0 200 200">
+                                        <defs>
+                                            <pattern height="20" id="grid" patternUnits="userSpaceOnUse" width="20">
+                                                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e5e7eb" stroke-width="1"></path>
+                                            </pattern>
+                                        </defs>
+                                        <rect fill="url(#grid)" height="100%" width="100%"></rect>
+                                        <rect fill="#94a3b8" height="80" width="20" x="40" y="40"></rect>
+                                        <rect fill="#94a3b8" height="20" width="60" x="100" y="80"></rect>
+                                        <rect fill="#ef4444" height="20" opacity="0.5" width="20" x="140" y="140"></rect>
+                                        <circle cx="50" cy="150" fill="#3b82f6" r="8"></circle>
+                                        <path d="M50 150 L50 130 L90 130 L90 60 L130 60 L150 150" fill="none" opacity="0.6" stroke="#3b82f6" stroke-dasharray="4 4" stroke-width="2"></path>
+                                    </svg>
+                                    <div class="absolute top-2 right-2 text-[8px] font-mono text-gray-400 bg-black/5 px-1 rounded">EPISODE: 402</div>
+                                </div>
+                                <div class="mt-4 px-2 font-hand text-center text-gray-600 dark:text-gray-300 leading-tight">
+                                    <span class="block text-xs text-gray-400 mb-1 tracking-widest uppercase">Fig B.3</span>
+                                    <span class="text-sm">RL Agent Navigating Maze Env</span>
+                                </div>
+                            </div>
+                        </label>
+                        <div class="relative group cursor-pointer perspective-1000 mt-6 md:mt-0">
+                            <div class="bg-white dark:bg-transparent dark:border dark:border-white p-3 pb-8 shadow-md transform rotate-3 transition-all duration-500 ease-out group-hover:scale-105 group-hover:rotate-[1deg] group-hover:shadow-2xl group-hover:z-20 relative border border-gray-100 dark:text-white">
+                                <div class="photo-corner tl"></div>
+                                <div class="photo-corner tr"></div>
+                                <div class="photo-corner bl"></div>
+                                <div class="photo-corner br"></div>
+                                <div class="aspect-square bg-gray-900 overflow-hidden border border-gray-200 dark:border-gray-700 relative flex items-center justify-center">
+                                    <svg class="w-full h-full p-4 opacity-90" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 200 200">
+                                        <path d="M70 180 L70 120 L50 90 M70 120 L90 70 M90 120 L110 60 M110 120 L130 70 M130 120 L150 100 L150 180" stroke="#34d399" stroke-width="2"></path>
+                                        <circle cx="70" cy="120" fill="#10b981" r="3" stroke="none"></circle>
+                                        <circle cx="90" cy="120" fill="#10b981" r="3" stroke="none"></circle>
+                                        <circle cx="110" cy="120" fill="#10b981" r="3" stroke="none"></circle>
+                                        <circle cx="130" cy="120" fill="#10b981" r="3" stroke="none"></circle>
+                                        <circle cx="50" cy="90" fill="#10b981" r="3" stroke="none"></circle>
+                                        <circle cx="90" cy="70" fill="#10b981" r="3" stroke="none"></circle>
+                                        <circle cx="110" cy="60" fill="#10b981" r="3" stroke="none"></circle>
+                                        <circle cx="130" cy="70" fill="#10b981" r="3" stroke="none"></circle>
+                                        <rect height="150" stroke="#10b981" stroke-dasharray="4" stroke-width="1" width="140" x="30" y="40"></rect>
+                                        <text fill="#10b981" font-family="monospace" font-size="10" x="35" y="55">CONF: 98.2%</text>
+                                    </svg>
+                                </div>
+                                <div class="mt-4 px-2 font-hand text-center text-gray-600 dark:text-gray-300 leading-tight">
+                                    <span class="block text-xs text-gray-400 mb-1 tracking-widest uppercase">Fig C.7</span>
+                                    <span class="text-sm">Real-time ASL Hand Tracking</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CORRESPONDENCE SECTION -->
+            <section class="py-16 px-6 bg-[#fdfdfd] dark:bg-transparent" id="correspondence">
+                <div class="max-w-[600px] mx-auto relative bg-[url('https://www.transparenttextures.com/patterns/graphy.png')] bg-white dark:bg-slate-900/50 shadow-xl p-8 md:p-12 border border-gray-300 dark:border-white/20">
+                    <div class="absolute top-0 left-0 w-full h-2 bg-[repeating-linear-gradient(45deg,#ef4444,#ef4444_10px,#fff_10px,#fff_20px,#3b82f6_20px,#3b82f6_30px,#fff_30px,#fff_40px)]"></div>
+                    <h3 class="font-hand text-3xl font-bold mb-8 text-center underline decoration-wavy decoration-gray-300 dark:text-white">Correspondence</h3>
+                    <form class="space-y-8 font-hand text-xl">
+                        <div class="relative">
+                            <label class="block text-gray-500 text-sm mb-1 uppercase tracking-wider">From:</label>
+                            <input [(ngModel)]="senderName" name="name" class="w-full bg-transparent border-0 border-b-2 border-gray-300 dark:border-gray-600 focus:border-gray-800 dark:focus:border-white focus:ring-0 px-0 py-2 placeholder-gray-300 transition-colors dark:text-white" placeholder="Your Name" type="text"/>
+                        </div>
+                        <div class="relative">
+                            <label class="block text-gray-500 text-sm mb-1 uppercase tracking-wider">Subject:</label>
+                            <input [(ngModel)]="senderSubject" name="subject" class="w-full bg-transparent border-0 border-b-2 border-gray-300 dark:border-gray-600 focus:border-gray-800 dark:focus:border-white focus:ring-0 px-0 py-2 placeholder-gray-300 transition-colors dark:text-white" placeholder="Regarding..." type="text"/>
+                        </div>
+                        <div class="relative">
+                            <label class="block text-gray-500 text-sm mb-1 uppercase tracking-wider">Message:</label>
+                            <textarea [(ngModel)]="senderMessage" name="message" class="w-full bg-[linear-gradient(transparent_2rem,#e5e7eb_2rem)] bg-[size:100%_2.2rem] leading-[2.2rem] border-0 focus:ring-0 px-0 py-0 resize-none placeholder-gray-300 text-gray-800 dark:text-white dark:bg-[linear-gradient(transparent_2rem,rgba(255,255,255,0.2)_2rem)]" placeholder="Write your message here..." rows="4"></textarea>
+                        </div>
+                        <div class="text-right mt-6">
+                            <button (click)="sendEmail()"
+                                    [disabled]="isSending() || sentSuccess()"
+                                    [class.bg-green-700]="sentSuccess()"
+                                    class="bg-gray-800 dark:bg-white dark:text-gray-900 text-white font-hand px-8 py-3 rounded-sm shadow-md hover:bg-gray-700 hover:shadow-lg transition-all transform hover:-translate-y-1 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none" type="button">
+                                @if (isSending()) {
+                                    <span>Sending...</span>
+                                } @else if (sentSuccess()) {
+                                    <span>Letter Sent!</span>
+                                } @else {
+                                    <span>Send Letter</span>
+                                }
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- FOOTER -->
+            <footer class="pb-12 pt-12 px-6 border-t border-gray-800 dark:border-white bg-gray-50 dark:bg-transparent" id="contact">
+                <div class="flex flex-col md:flex-row justify-between items-end gap-8 max-w-[1000px] mx-auto">
+                    <div>
+                        <h3 class="font-hand text-3xl font-bold mb-4 dark:text-white">End of Log.</h3>
+                        <a class="font-hand text-xl underline decoration-wavy hover:text-green-700 dark:text-gray-300 dark:hover:text-green-400" href="mailto:sarveshs.rahul@gmail.com">{{ resumeData().contact.email }}</a>
+                    </div>
+                    <div class="flex flex-col items-end gap-2 text-right font-hand text-sm text-gray-600 dark:text-gray-400">
+                        <div class="flex items-center gap-2">
+                            <span>Recorded By:</span>
+                            <div class="border-b border-gray-400 dark:border-gray-600 min-w-[120px] text-center pb-1">
+                                <span class="font-hand text-lg text-gray-800 dark:text-gray-200">{{ resumeData().name }}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span>Date:</span>
+                            <span class="border-b border-gray-400 dark:border-gray-600 w-32 text-center">2024-11-20</span>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </div>
+</div>
+
+<div (click)="toggleStamp()" class="stamp-control fixed bottom-8 right-8 cursor-pointer z-50 transition-all duration-300 hover:scale-105 active:scale-95 group">
+    <div class="relative bg-white/10 backdrop-blur-sm border-4 border-red-700/80 rounded-sm p-4 rotate-12 shadow-xl group-hover:rotate-6 transition-transform ink-stamp dark:border-red-400">
+        <div class="border-2 border-red-700/80 px-4 py-1 dark:border-red-400">
+            <span class="font-hand font-bold text-xl text-red-700 tracking-widest uppercase dark:text-red-400">Classified</span>
+        </div>
+        <div class="absolute -top-12 left-1/2 -translate-x-1/2 w-4 h-12 bg-gray-800 dark:bg-gray-200 rounded-full shadow-lg"></div>
+        <div class="absolute -top-14 left-1/2 -translate-x-1/2 w-16 h-4 bg-gray-800 dark:bg-gray-200 rounded-full shadow-lg"></div>
+    </div>
+    <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs font-hand text-gray-500 w-max opacity-0 group-hover:opacity-100 transition-opacity">Click to Stamp</span>
+</div>
+
+<!-- Stamp Overlay -->
+@if (isStamped()) {
+    <div class="fixed inset-0 z-[60] pointer-events-none flex items-center justify-center overflow-hidden">
+        <div class="relative transform -rotate-12 border-[12px] border-red-800/60 p-12 rounded-xl animate-[stampBounce_0.4s_ease-out_forwards] mix-blend-multiply opacity-90 backdrop-blur-[1px]">
+            <!-- Grunge Texture Mask -->
+            <div class="absolute inset-0 border-[4px] border-red-800/40 m-2 rounded-lg"></div>
+            <h1 class="font-black text-8xl md:text-9xl text-red-800/70 tracking-tighter uppercase font-mono" style="text-shadow: 2px 2px 0px rgba(255,255,255,0.4);">
+                TOP<br/>SECRET
+            </h1>
+            <div class="absolute bottom-4 right-6 font-hand text-red-800/80 text-2xl font-bold -rotate-6">Confidential // Level 4</div>
+            <div class="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/black-felt.png')] opacity-20 mix-blend-overlay"></div>
+        </div>
+    </div>
+}
+
+<!-- VIDEO MODAL (CRT SCREEN) -->
+<input class="peer/video hidden" id="rl-video-toggle" type="checkbox"/>
+<div class="fixed inset-0 z-[100] hidden peer-checked/video:flex justify-center items-center bg-stone-900/60 backdrop-blur-sm p-4 transition-all">
+    <label class="absolute inset-0 cursor-pointer" for="rl-video-toggle"></label>
+    <div class="relative w-[90vw] max-w-[600px] flex flex-col items-center">
+        <label class="absolute -top-12 right-0 text-white font-hand text-lg cursor-pointer hover:text-red-400 transition-colors flex items-center gap-2 group" for="rl-video-toggle">
+            [ CLOSE TERMINAL ] <span class="material-symbols-outlined group-hover:rotate-90 transition-transform">close</span>
+        </label>
+        <div class="relative w-full aspect-[4/3] bg-comp-pad p-6 rounded-lg shadow-2xl border-4 border-gray-700 sketch-notebook-path">
+            <svg class="absolute inset-0 w-full h-full pointer-events-none text-gray-700" preserveAspectRatio="none" viewBox="0 0 400 300">
+                <path d="M10 10 Q 200 -5 390 10 Q 405 150 390 290 Q 200 305 10 290 Q -5 150 10 10" fill="none" stroke="currentColor" stroke-width="3"></path>
+                <path d="M15 15 Q 200 0 385 15 Q 400 150 385 285 Q 200 300 15 285 Q 0 150 15 15" fill="none" opacity="0.3" stroke="currentColor" stroke-width="1"></path>
+            </svg>
+            <div class="relative w-full h-full bg-[#1a1a1a] rounded-[30px] overflow-hidden shadow-inner ring-4 ring-black/20 crt-screen flex items-center justify-center">
+                <div class="relative w-[80%] h-[80%] opacity-90">
+                    <div class="absolute inset-0" style="background-image: linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px); background-size: 20px 20px;"></div>
+                    <div class="absolute top-[20%] left-[20%] w-[60%] h-1 bg-green-500/50 shadow-[0_0_10px_rgba(34,197,94,0.6)]"></div>
+                    <div class="absolute top-[20%] left-[80%] w-1 h-[40%] bg-green-500/50 shadow-[0_0_10px_rgba(34,197,94,0.6)]"></div>
+                    <div class="absolute top-[60%] left-[20%] w-[40%] h-1 bg-green-500/50 shadow-[0_0_10px_rgba(34,197,94,0.6)]"></div>
+                    <div class="absolute bottom-[20%] right-[20%] w-6 h-6 border-2 border-green-400 rounded-full animate-pulse flex items-center justify-center">
+                        <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                    </div>
+                    <div class="absolute top-0 left-0 w-4 h-4 bg-blue-400 shadow-[0_0_15px_rgba(96,165,250,0.8)] rounded-sm animate-agent-move z-10">
+                        <div class="absolute -top-4 -left-2 text-[8px] text-blue-300 font-mono whitespace-nowrap">ACTOR_01</div>
+                    </div>
+                    <svg class="absolute inset-0 w-full h-full pointer-events-none">
+                        <path d="M42 42 L102 42 L102 102 L42 102 L42 162 L102 162 L102 122 L162 122 L162 162" fill="none" stroke="#3b82f6" stroke-dasharray="1000" stroke-dashoffset="1000" stroke-opacity="0.3" stroke-width="2">
+                            <animate attributeName="stroke-dashoffset" dur="8s" fill="freeze" from="1000" repeatCount="indefinite" to="0"></animate>
+                        </path>
+                    </svg>
+                </div>
+                <div class="absolute top-0 right-0 w-[40%] h-full bg-gradient-to-l from-white/5 to-transparent pointer-events-none"></div>
+                <div class="absolute top-0 left-10 w-20 h-full bg-gradient-to-r from-white/5 to-transparent pointer-events-none transform -skew-x-12"></div>
+                <div class="absolute top-4 left-6 flex items-center gap-2">
+                    <div class="w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-[0_0_8px_red]"></div>
+                    <span class="font-mono text-xs text-red-500 tracking-widest crt-flicker">REC • LIVE</span>
+                </div>
+                <div class="absolute bottom-4 right-6 font-mono text-xs text-green-500/80 crt-flicker">
+                    FPS: 59.9
+                </div>
+            </div>
+            <div class="absolute right-[-20px] top-10 flex flex-col gap-4">
+                <div class="w-8 h-8 rounded-full border-2 border-gray-700 bg-gray-200 shadow-lg flex items-center justify-center transform rotate-45 cursor-pointer hover:rotate-90 transition-transform">
+                    <div class="w-full h-1 bg-gray-400"></div>
+                </div>
+                <div class="w-8 h-8 rounded-full border-2 border-gray-700 bg-gray-200 shadow-lg flex items-center justify-center transform -rotate-12 cursor-pointer hover:rotate-45 transition-transform">
+                    <div class="w-full h-1 bg-gray-400"></div>
+                </div>
+            </div>
+        </div>
+        <div class="w-full mt-4 bg-white/90 border border-gray-300 rounded-sm shadow-xl p-4 relative group">
+            <div class="absolute -top-3 left-4 bg-yellow-100 px-2 py-0.5 border border-gray-300 shadow-sm transform -rotate-2">
+                <span class="font-hand font-bold text-xs text-gray-700 tracking-widest">TECHNICAL LOG</span>
+            </div>
+            <div class="h-24 overflow-hidden relative font-mono text-xs text-gray-600 bg-gray-50 p-2 border border-dashed border-gray-200">
+                <div class="animate-log-scroll flex flex-col gap-1">
+                    <div class="text-green-700">[INFO] Environment initialized. Seed: 4923</div>
+                    <div class="text-blue-700">[DEBUG] Agent position: (0,0)</div>
+                    <div class="text-gray-500">Loss: 0.892 | Reward: -0.1</div>
+                    <div class="text-blue-700">[DEBUG] Action taken: RIGHT</div>
+                    <div class="text-gray-500">Loss: 0.741 | Reward: +0.5</div>
+                    <div class="text-blue-700">[DEBUG] Action taken: DOWN</div>
+                    <div class="text-gray-500">Loss: 0.512 | Reward: +1.2</div>
+                    <div class="text-orange-600">[WARN] Collision detected near wall 2</div>
+                    <div class="text-blue-700">[DEBUG] Backtracking...</div>
+                    <div class="text-green-700">[SUCCESS] Goal reached! Total Reward: +10.5</div>
+                    <div class="text-gray-500">Resetting environment...</div>
+                    <div class="text-green-700">[INFO] New Episode Started.</div>
+                </div>
+                <div class="absolute inset-0 pointer-events-none shadow-[inset_0_-20px_20px_-10px_rgba(255,255,255,1)]"></div>
+            </div>
+        </div>
+    </div>
+</div>
